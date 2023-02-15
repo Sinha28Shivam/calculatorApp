@@ -21,7 +21,11 @@ echo -e "\e[32m2. Scientific calculation\e[0m"
 # Function to calculate the result of an expression and store it in a text file
 calculate() {
   result=$(echo "$*" | bc -l)
-  echo "$*" = "$result" >> calculations.txt
+
+
+  #timestamp
+  ts=$(date +"%Y-%m-%d %H:%M:%S")
+  echo "$*" = "$result performed on $ts" >> calculations.txt
   echo "Result: $result"
 }
 
@@ -56,8 +60,8 @@ Normal_calculation() {
   #trying to apply the timestamp
 
   #get the current date and time
-  timestamp=$(date +"%Y-%m-%d %H:%M:%S")
-  echo "$num1 $operator  $num2 = $calculate performed on $timestamp" >> calculations.txt
+  #timestamp=$(date +"%Y-%m-%d %H:%M:%S")
+  #echo "$num1 $operator  $num2 = $calculate performed on $timestamp" >> calculations.txt
 
 
   #trying to implement the cear terminal sccreeb before displaying the result
