@@ -16,6 +16,7 @@ echo -e "Hello! \033[1m\033[31m$name\033[0m "
 echo "Available mode of calculations"
 echo -e "\e[32m1. Normal calculation\e[0m"
 echo -e "\e[32m2. Scientific calculation\e[0m"
+echo -e "\e[32m3. Recent calculations\e[0m"
 
 
 # Function to calculate the result of an expression and store it in a text file
@@ -29,25 +30,53 @@ calculate() {
   echo "Result: $result"
 }
 
+#displaying the recent calculation
+recent(){
+
+	echo "Recent Calculation"
+	for calculation in "${result[@]}";
+	do
+		echo "$calculation"
+	done
+	
+}
+
+# load recent calculations  from file
+if [ -f calculations.txt ];
+then
+	while read -r line;
+	do
+		result+=("$line")
+	done < calculations.txt
+fi
+
+
 Normal_calculation() {
+	# read -p "Enter the choice: " operator
+  echo "1. Addition"
+  echo "2. Sbubtraction"
+  echo "3. Multiplication"
+  echo "4. Division"
+  echo "4. Modulo(%)"
+  read -p "Enter the choice: " operator
+
   read -p "Enter the first number: " num1
-  read -p "Enter the operator(+ or - or / or % or *): " operator
   read -p "Enter the second number: " num2
   case $operator in
-    "+")
+    "1")
       calculate "$num1 + $num2"
       
       ;;
-    "-")
+    "2")
       calculate "$num1 - $num2"
       ;;
-    "/")
-      calculate "$num1 / $num2"
-      ;;
-      "*")
+    "3")
       calculate "$num1 * $num2"
       ;;
-      "%")
+     "4")
+      calculate "$num1 / $num2"
+      ;;
+     "5")
       calculate "$num1 % $num2"
       ;;
 
@@ -125,7 +154,7 @@ while true; do
     scientific_calculation
       ;;
     "3")
-    currency
+    recent
     ;;
     "q")
       echo "Exiting..."
