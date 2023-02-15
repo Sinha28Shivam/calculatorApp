@@ -2,6 +2,9 @@
 
 # We have started project on 14/02/2023
 
+#here we havw implemented the  clear command 
+clear
+
 echo -e " \033[1m\033[31m-----> Welcome! to Calculator <-----\033[0m "
 #echo -e "\033[14t\033[31m\033[24m\033[38;5;220 ----> Welcome to Calculator <---- \033[0m"
 
@@ -22,22 +25,6 @@ calculate() {
   echo "Result: $result"
 }
 
-# Main loop to read input from the user and perform calculations
-#while true; do
-#  read -p "Enter an expression to calculate: " expr
-#  case $expr in
-#    "quit" | "exit")
-#      echo "Exiting..."
-#      exit 0
- #     ;;
- #   *)
-#      calculate "$expr"
-#      ;;
-#  esac
-#done
-
-
-
 Normal_calculation() {
   read -p "Enter the first number: " num1
   read -p "Enter the operator(+ or - or / or % or *): " operator
@@ -45,6 +32,7 @@ Normal_calculation() {
   case $operator in
     "+")
       calculate "$num1 + $num2"
+      
       ;;
     "-")
       calculate "$num1 - $num2"
@@ -64,65 +52,65 @@ Normal_calculation() {
       echo "Invalid operator"
       ;;
   esac
+
+  #trying to apply the timestamp
+
+  #get the current date and time
+  timestamp=$(date +"%Y-%m-%d %H:%M:%S")
+  echo "$num1 $operator  $num2 = $calculate performed on $timestamp" >> calculations.txt
+
+
+  #trying to implement the cear terminal sccreeb before displaying the result
+	#clear didn't worked it's clear the screen before implementation
+
 }
 
-#scientific_calculation() {
-# first define the angle
+scientific_calculation() {
+	read -p "Enter the trignometery function(sin, cos, tan): " func
+	read -p "Enter the angle (in radian): " angle
 
-#read  "Enter angle in radian: " angle
+	case $func in
+		"sin")
+			calculate "s($angle)"
+			;;
+		"cos")
+			calculate "c($angle)"
+			;;
+		"tan")
+			calculate "s($angle)/c($angle)"
+			;;
 
-#case $angle in
-#	"sin")
-#		result=$(echo "s($angle)" | bc -l);;
-	
-#		*)
-#		echo "Invalid operator"
-#		;;
-#esac
-#echo "$angle = $result"
+		*)
+			echo "Invalid function"
+			;;
+	esac
 
-#}
-#scientific_calculation "sin"
 
-#read -p  "Enter an angle" angle
+}
 
-#calculate_trig() {
- # case $angle in
-#
-#    "sin")
-#	    result=$(echo "s($angle)" | bc -l)
-#	    ;;
-#    "cos") 
-#	    result=$(echo "c($angle)" | bc -l)
-#	    ;;
-#    "tan") 
-#	    result=$(echo "s($angle)/c($angle)" | bc -l)
-#	    ;;
-#   "cot") 
-#	    result=$(echo "c($angle)/s($angle)" | bc -l)
-#	    ;;
-#    "sec") 
-#	    result=$(echo "1/c($angle)" | bc -l)
-#	    ;;
-#   "csc") 
-#	    result=$(echo "1/s($angle)" | bc -l)
-#	    ;;
-#    *)
-#	    echo "Invalid function: " 
-#	    ;;
-#  esac
-#  echo "($angle) = $result"
-#}
+# function for currency converter
 
-# Calculate the trigonometric functions using the function
-#calculate_trig "sin"
-#calculate_trig "cos"
-#calculate_trig "tan"
-#calculate_trig "cot"
-#calculate_trig "sec"
-#calculate_trig "csc"
+currency() {
+read -p "Enter the amount in USD: " usd
+read -p "Enter the currency to convert to (EUR, GBP, JPY): " currency
 
-# Main loop to read input from the user and perform calculations
+case $currency in
+	"EUR")
+		calculate "$usd * 0.84"
+		;;
+	"GBP")
+		calculate "$usd * 0.73"
+		;;
+	"JPY")
+		calculate "$usd * 105.24"
+		;;
+	*)
+		echo "Invalid currency"
+		;;
+esac
+}
+
+#while loop to read input from the user and perform calculations
 while true; do
   read -p "Enter '1' for Normal Calculation, Enter '2' for Scientific Calculation, or 'q' to quit: " choice
   case $choice in
@@ -130,8 +118,11 @@ while true; do
       Normal_calculation
       ;;
     "2")
-     calculate_trig
+    scientific_calculation
       ;;
+    "3")
+    currency
+    ;;
     "q")
       echo "Exiting..."
       exit 0
