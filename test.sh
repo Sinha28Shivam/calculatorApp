@@ -4,19 +4,47 @@
 clear
 
 #Welcome message
-dialog --title "Welcome!" --msgbox "Welcome to Calculator" 10 30
+dialog --title "Welcome!" --msgbox "Welcome to Calculator" 20 50
 
 #Asking for user's name
 name=$(dialog --title "Name" --inputbox "Please enter your name:" 10 30 3>&1 1>&2 2>&3)
-dialog --title "Name" --msgbox "Hello !  $name, welcome" 10 30
+dialog --title "Name" --msgbox "Hello !  $name, welcome" 20 50
 
+# add to history
+
+calculate() {
+  result=$(echo "$*" | bc -l)
+
+  # timestamp
+  ts=$(date +"%Y-%m-%d %H:%M:%S")
+  echo "$*" = "$result performed on $ts" >> calculations.txt
+
+  # display result in a dialog box
+  dialog --title "Calculation Result" --msgbox "Result: $result" 8 40
+}
+
+# function to display the recent calculations
+recent() {
+  # load recent calculations from file
+  if [[ -f calculations.txt ]]; 
+  then
+    result=$(cat calculations.txt)
+  else
+    result="No recent calculations found."
+  fi
+
+  # display recent calculations in a dialog box
+  dialog --title "Recent Calculations" --msgbox "$result" 20 80
+}
+
+while true : 
+do
 #Displaying available modes of calculations
 options=(1 "Normal Calculation"
          2 "Scientific Calculation"
-         3 "Recent calculations")
+         3 "Calculation History"
+         4 "Exit")
         
-#while true: do
-
 choice=$(dialog --clear --title "Calculator" --menu "Please select a mode of calculation:" 15 50 4 "${options[@]}" 2>&1 >/dev/tty)
 
 case $choice in
@@ -49,29 +77,25 @@ case $choice in
         result=$(echo "$num1 % $num2" | bc -l)
         ;;
       *)
-        dialog --title "Error" --msgbox "Invalid operator" 10 30
+        dialog --title "Error" --msgbox "Invalid operator" 20 50
         exit 1
         ;;
     esac
 
     #timestamp
-    ts=$(date +"%Y-%m-%d %H:%M:%S")
-    
-    
-
-    #echo "$num1 $operator $num2 = $result performed on $ts" >> calculations.txt
-    
-     #dialog --title "Result" --msgbox "Result: cat calculations.txt" 10 30
-    dialog --title "Result" --msgbox "Result: $result" 10 30
+   # ts=$(date +"%Y-%m-%d %H:%M:%S")
+    addtohis="$num1 $operator $num2" "$result"
+    dialog --title "Result" --msgbox "Result: $result" 20 500
     ;;
 
   2) # Scientific Calculation
     function_options=(1 "Trignometric Function"
                       2 "Currency Converter")
 
-    function=$(dialog --title "Scientific Calculation" --menu "Please select a function:" 15 50 3 "${function_options[@]}" 2>&1 >/dev/tty)
+     function=$(dialog --title "Scientific Calculation" --menu "Please select a function:" 15 50 3 "${function_options[@]}" 2>&1 >/dev/tty)
 
-    if [ $function -eq 1 ]; then
+     if [ $function -eq 1 ]; 
+     then
       trig_options=(1 "sin"
                     2 "cos"
                     3 "tan")
@@ -79,35 +103,29 @@ case $choice in
       trig=$(dialog --title "Trignometric Function" --menu "Please select a trignometric function:" 15 50 4 "${trig_options[@]}" 2>&1 >/dev/tty)
 
       angle=$(dialog --title "Trignometric Function" --inputbox "Enter the angle (in radian):" 10 30 2>&1 >/dev/tty)
-
-
-  case $trig in
-    1)
+    case $trig in
+     1)
       result=$(echo "s($angle)" | bc -l)
       dialog --title "Result" --msgbox "Result: $result" 10 30
       ;;
-    2)
+     2)
       result=$(echo "c($angle)" | bc -l)
       dialog --title "Result" --msgbox "Result: $result" 10 30
       ;;
-    3)
+     3)
       result=$(echo "s($angle)/c($angle)" | bc -l)
       dialog --title "Result" --msgbox "Result: $result" 10 30
       ;;
-  esac
-fi
-case $choice in
-  # ... other cases ...
-
-  3)
-    if [ -f "calculations.txt" ]; then
-      # Read the contents of calculations.txt and display in a dialog box
-      result=$(dialog --title "Recent calculations" --textbox "calculations.txt" 20 60 2>&1 >/dev/tty)
-    else
-      dialog --title "Recent calculations" --msgbox "No recent calculations found" 10 30
+    
+    esac
     fi
     ;;
-esac
-esac
+  3) echo "Displaying the history"
+    recent
+    ;;
 
-clear
+  4) #Exit
+    break
+    ;;
+esac
+done
