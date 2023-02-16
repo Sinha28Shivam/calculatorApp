@@ -57,8 +57,10 @@ Normal_calculation() {
   echo "2. Subtraction"
   echo "3. Multiplication"
   echo "4. Division"
-  echo "4. Modulo(%)"
+  echo "5. Modulo(%)"
+#  echo "6. Linear Equation"
   read -p "Enter the choice: " operator
+
 
   read -p "Enter the first number: " num1
   read -p "Enter the second number: " num2
@@ -79,28 +81,24 @@ Normal_calculation() {
      "5")
       calculate "$num1 % $num2"
       ;;
-
-
+        
 *)
       echo "Invalid operator"
       ;;
   esac
 
-  #trying to apply the timestamp
-
-  #get the current date and time
-  #timestamp=$(date +"%Y-%m-%d %H:%M:%S")
-  #echo "$num1 $operator  $num2 = $calculate performed on $timestamp" >> calculations.txt
-
-
-  #trying to implement the cear terminal sccreeb before displaying the result
-	#clear didn't worked it's clear the screen before implementation
+	  
 
 }
 
-scientific_calculation() {
+
+# Performing the  scientific calculation
+
+
+
+	scientific_calculation() {
 	echo "1. Trignometric Function"
-	echo "2. Currecy Converter"
+	echo "2. Currency Converter"
 
 	read -p "Enter the choice: " choice
 
