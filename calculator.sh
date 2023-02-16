@@ -54,7 +54,7 @@ fi
 Normal_calculation() {
 	# read -p "Enter the choice: " operator
   echo "1. Addition"
-  echo "2. Sbubtraction"
+  echo "2. Subtraction"
   echo "3. Multiplication"
   echo "4. Division"
   echo "4. Modulo(%)"
@@ -99,6 +99,13 @@ Normal_calculation() {
 }
 
 scientific_calculation() {
+	echo "1. Trignometric Function"
+	echo "2. Currecy Converter"
+
+	read -p "Enter the choice: " choice
+
+	if [[ $choice == "1" ]];
+	then
 	read -p "Enter the trignometery function(sin, cos, tan): " func
 	read -p "Enter the angle (in radian): " angle
 
@@ -119,11 +126,9 @@ scientific_calculation() {
 	esac
 
 
-}
-
 # function for currency converter
-
-currency() {
+elif [[ $choice == "2" ]];
+then
 read -p "Enter the amount in USD: " usd
 read -p "Enter the currency to convert to (EUR, GBP, JPY): " currency
 
@@ -141,11 +146,16 @@ case $currency in
 		echo "Invalid currency"
 		;;
 esac
+else 
+
+	echo "Invalid choice"
+fi
 }
 
 #while loop to read input from the user and perform calculations
-while true; do
-  read -p "Enter '1' for Normal Calculation, Enter '2' for Scientific Calculation, or 'q' to quit: " choice
+while true; 
+do
+  read -p "Enter '1' for Normal Calculation, Enter '2' for Scientific Calculation, Enter '3' for see the history, 'q' to quit: " choice
   case $choice in
     "1")
       Normal_calculation
