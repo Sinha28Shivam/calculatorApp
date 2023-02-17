@@ -26,16 +26,29 @@ calculate() {
 # function to display the recent calculations
 recent() {
   # load recent calculations from file
-  if [[ -f calculations.txt ]]; 
+ # if [[ -f calculations.txt ]]; 
+ # then
+ #   result=$(cat calculations.txt)
+ # else
+    #result="No recent calculations found."
+  #fi
+  
+    if [ -f calculations.txt ];
   then
-    result=$(cat calculations.txt)
-  else
-    result="No recent calculations found."
-  fi
+  while read -r line;
+  do
+    result+=("$line")
+  done < calculations.txt
+fi
 
   # display recent calculations in a dialog box
   dialog --title "Recent Calculations" --msgbox "$result" 20 80
+  
+
 }
+
+
+
 
 while true : 
 do
@@ -53,7 +66,9 @@ case $choice in
                       2 "Subtraction"
                       3 "Multiplication"
                       4 "Division"
-                      5 "Modulo(%)")
+                      5 "Modulo(%)"
+                      6 "Square root" 
+                      7 "power")
 
     operator=$(dialog --title "Normal Calculation" --menu "Please select an operator:" 15 50 6 "${operator_options[@]}" 2>&1 >/dev/tty)
 
@@ -76,6 +91,24 @@ case $choice in
       5)
         result=$(echo "$num1 % $num2" | bc -l)
         ;;
+      6)
+        if [[ $operator == sqrt* ]]; 
+        then
+    	result="$(echo "scale=4; sqrt(${operator:4})")"
+ 	else
+ 	  result=$operator
+ 	  fi
+ 	 ;;
+       7)
+        if [[ $operator == pow* ]];
+         then
+          result="$(echo "scale=4; ${operator:3}")"
+          else
+          result=$operator
+          fi
+          ;;
+   
+         
       *)
         dialog --title "Error" --msgbox "Invalid operator" 20 50
         exit 1
